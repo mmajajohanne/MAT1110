@@ -1,0 +1,415 @@
+% main.tex - Mal beregnet for bruk i IN1080 basert på "Mal beregnet for bruk i INF1080"
+% Time-stamp: <2021-11-12>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Dette dokumentet har innstillinger som fungerer på Ifi-serverne, Ifis RHEL 
+% klientmaskiner og Overleaf.
+% Du kan lage en pdf-fil av denne filen med:
+% latexmk -pdf -jobname=oblignummer_$(whoami) -shell-escape main.tex
+%
+% Et LaTeX-dokument har to deler. Først skriver du inn ting som
+% gjelder hele dokumentet, blant annet hvilke pakker du skal bruke.
+% Så kommer selve innholdet, mellom \begin{document} og \end{document}
+%
+% Husk at tegnene: # $ % ^ & _ { } ~ og \ har spesiell betydning.
+%
+% For mer hjelp og mer info om hvordan du kan stille inn dokumentet
+% er disse sidene bra:
+% http://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
+% http://en.wikibooks.org/wiki/LaTeX/
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 1. Hva slags dokument.
+\documentclass[12pt,norsk,a4paper]{article}
+% For eget tittelblad: legg ,titlepage til rett etter a4paper
+% For tosidig: legg til ,twopage
+
+% 2. Norske tegn og norsk utseende
+
+% 2a. Tekstfiler med norske tegn kan lagres i utf-8 eller iso-latin-1
+% (iso-8859-1). På Ifi-maskinene er utf8 standard.
+\usepackage[utf8]{inputenc} % evt utf8 i stedet for latin1
+
+% 2b. For norsk orddeling og dato
+\usepackage[norsk]{babel}
+\usepackage[norsk]{isodate}
+%asmath
+\usepackage{amsmath}
+
+% 2c. For norske tegn
+\usepackage[T1]{fontenc}
+
+% 2d. For parallelle avsnitt (fint i INF1080, men ikke så fint i vanlige artikler)
+\usepackage{parskip}
+
+% 2e. For å formattere URL-er.
+\usepackage{url}
+
+% 3. Om dokumentet - brukes blant annet til tittelen
+\author{Maja Marjamaa, majajma}
+\title{MAT1110 - Obligatorisk oppgave 2} % erstatt N
+\date{\today}
+
+% 4. Skrifttype og symboler
+\usepackage[small,euler-digits]{eulervm}
+%\usepackage[bitstream-charter]{mathdesign}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{enumerate}
+\usepackage{xcolor} % to access the named colour LightGray
+\definecolor{LightGray}{gray}{0.9}
+
+% 5. For litt mindre marger enn standard i LaTeX
+\usepackage{a4wide}
+\usepackage[top=2cm]{geometry}
+
+% 6. Figurer og bilder
+
+% 6a. For å bryte tekst rundt en figur
+%\usepackage{wrapfig}
+
+% 6b. For bilder - med denne pakken kan du legge inn bilder og
+% illustrasjoner slik:
+%                  \includegraphics[width=.5\textwidth]{bilde.pdf}
+\usepackage{graphicx}
+\graphicspath{ {./fig/} }
+
+% 7. For grafer og slikt
+%\usepackage{tikz}
+%\usetikzlibrary{trees}
+% Det fins mange tikz-bibliotek, det er nesten ingen grenser for hva
+% du kan lage med dette. Se http://www.texample.net/tikz/
+
+% 8. Egendefinerte kommandoer kan du legge inn slik:
+\newcommand{\tuple}[1]{\ensuremath{\langle #1\rangle}}
+\newcommand{\set}[1]{\ensuremath{\{#1\}}}
+\newcommand{\imp}{\ensuremath{\rightarrow}}
+\newcommand{\M}{\ensuremath{\mathcal{M}}}
+\newcommand{\AF}{edge from parent[draw=none]}
+\newcommand{\NODE}[1]{\{node \{\ensuremath{#1}\}\}}
+\usepackage{matlab-prettifier}
+
+% 9. Egendefinert overskrift som passer obligformatet
+\usepackage[explicit]{titlesec}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{#1\ \thesection}
+
+% http://en.wikibooks.org/wiki/LaTeX/Customizing_LaTeX#New_commands
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Selve innholdet:
+\begin{document}
+
+% a. Lager en tittel på dokumentet.
+\maketitle
+
+% a. For å få bokstavnummerering på 'subsection's
+\renewcommand{\thesubsection}{(\alph{subsection})}
+
+
+\section{Oppgave} % for hver oppgave, lag en \section{Oppgave}
+a) Har gitt at $x_n, y_n,z_n$ er antall vogner på Kiwi, Meny og Rema1000 etter $n$ dager. Matrisen $A$ beskriver hvordan vognene flyttes mellom butikkene per dag, der hvert element $a_{ij}$ i matrisen er sansynnligeten for at en vogn flyttes fra butikk $j$ til butikk $i$. For eksempel blir $50\%$ av Kiwis vogner igjen på Kiwi og derfor er $a_{11} = 0.5$. \\\\
+For å finne antall vogner i hver butikk etter $n+1$ dager, kan man multiplisere matrisen $A$ med vektoren $(x_n,y_n, z_n)$. Resultatet av denne multiplikasjonen vil gi en ny vektor som representerer fordelingen av vogner etter én ny dag ($n+1$), basert på fordeligen fra forrige dag ($n$). 
+
+\vspace{0.2in}
+b) Finner det karakteristiske polynomet ved å beregne determinanten til $\lambda I_n-A$, hvor $I$ er identitetsmatrisen. 
+
+\begin{equation}\nonumber
+    \Bigg|
+     \begin{pmatrix}
+        \lambda & 0 & 0 \\ 0 & \lambda & 0 \\ 0 & 0 & \lambda
+    \end{pmatrix} 
+    - \begin{pmatrix}
+        0.5 & 0.3 & 0.2 \\ 0.3 & 0.4 & 0.3 \\ 0.2 & 0.3 & 0.5
+    \end{pmatrix}
+    \Bigg|
+\end{equation}\\
+\begin{equation}\nonumber
+    =
+    \Bigg|
+    \begin{pmatrix}
+        \lambda-0.5 & -0.3 & -0.2 \\ -0.3 & \lambda-0.4 & -0.3 \\ -0.2 & -0.3 & \lambda-0.5 
+    \end{pmatrix}
+    \Bigg| 
+\end{equation}\\
+\begin{equation}\nonumber
+    = (\lambda-0.5) \bigg| \begin{pmatrix}
+    \lambda-0.4 & -0.3 \\ -0.3 & \lambda-0.5
+    \end{pmatrix} \bigg| - (-0.3) \bigg| \begin{pmatrix}
+    -0.3 & -0.2 \\ -0.3 & \lambda-0.5
+    \end{pmatrix} \bigg| + (-0.2) \bigg| \begin{pmatrix}
+    -0.3 & \lambda-0.4 \\ -0.2 & -0.3
+    \end{pmatrix} \bigg|
+\end{equation}\\ \begin{equation}\nonumber
+    = (\lambda-0.5)(\lambda^2-0.9\lambda+0.11)+0.3(-0.3\lambda+0.09)-0.2(0.2\lambda+0.01)
+\end{equation}\\
+\begin{equation}\nonumber
+    = \lambda^3-1.4\lambda^2+0.43\lambda-0.03
+\end{equation}
+\\ 
+Har gitt at $\lambda^3-1.4\lambda^2+0.43\lambda-0.03 = (\lambda-1)(\lambda^2-0.4\lambda+0.03)$. Kan altså se at $\lambda = 1$ er en løsning siden $\lambda = 1$ vil gi 0 i den første parantesen, og dermed gjøre hele uttrykket lik 0. Løsningene til det karakteristiske polynomet er lik egenverdiene til matrisen $A$, altså er $\lambda = 1$ en egenverdi for $A$. \\\\
+For å finne en tilhørende egenvektor løser man $(A-\lambda I)v=0$ med egenverdi $\lambda=1$. Man ender da opp med likningssystemet:
+    \begin{equation} \nonumber
+        -0.5x + 0.3y+0.2z=0
+    \end{equation}\begin{equation}\nonumber
+        0.3x-0.6y+0.3z=0
+    \end{equation}\begin{equation}\nonumber
+        0.2x+0.3y-0.5z=0
+    \end{equation}
+\\ Man kan enkelt se at vektoren $V=(1, 1, 1)$ vil være en løsning på systemet. Dette gir mening, da summen av sannsynlighetsfordelingene av vognene til sammen skal bli 1, siden summen av vogner ikke endres fra dag til dag.
+\\\\
+Finner de andre egenverdiene i matlab med dette scriptet:
+\\
+\begin{lstlisting}[style=Matlab-editor]
+% Definer matrisen A
+A = [0.5 0.3 0.2; 0.3 0.4 0.3; 0.2 0.3 0.5];
+
+% Beregn egenverdier og egenvektorer til matrisen A
+[V, D] = eig(A);
+
+% Vis egenverdiene
+disp('Egenverdiene:');
+disp(D);
+
+% Vis egenvektorene
+disp('Egenvektorene:');
+disp(V);
+
+
+\end{lstlisting}\\
+\vspace{0.1in}
+Får denne utprinten:
+\begin{lstlisting}
+   Egenverdiene:
+    0.1000         0         0
+         0    0.3000         0
+         0         0    1.0000
+
+    Egenvektorene:
+   -0.4082   -0.7071    0.5774
+    0.8165   -0.0000    0.5774
+   -0.4082    0.7071    0.5774
+\end{lstlisting}\\
+\newpage
+Kan teste om egenvektorene stemmer ved å sette dem inn i det karakteristiske polynomet $(\lambda -1)(\lambda^2-0.4\lambda + 0.03)$:
+\\\\ Setter inn $\lambda = 0.1$:
+\begin{equation}\nonumber
+(0.1 -1)(0.1^2-0.4*0.1 + 0.03) \\ = (-0.9)(0.01-0.04 + 0.03) \\ = (-0.9)*0 = 0 
+\end{equation}
+\\ Setter inn $\lambda = 0.3$:
+\begin{equation}\nonumber
+(0.3 -1)(0.3^2-0.4*0.3 + 0.03) \\ = (-0.7)(0.09-0.12 + 0.03) \\ = (-0.7)*0 = 0 
+\end{equation}
+\\ Begge egenverdiene er løsninger på polynomet, altså de stemmer. 
+\\ \\ Kan sjekke om egenvektorene stemmer ved å sjekke om $Av = \lambda v$:
+\vspace{0.1in}
+
+\begin{equation}\nonumber
+Av_1 = \begin{pmatrix}
+    0.5 & 0.3 & 0.2 \\ 0.3 & 0.4 & 0.3 \\ 0.2 & 0.3 & 0.5
+\end{pmatrix}\begin{pmatrix}
+     -0.4082 \\ 0.8165 \\  -0.4082
+\end{pmatrix} = 0.1 \begin{pmatrix}
+     -0.4082 \\ 0.8165 \\  -0.4082
+\end{pmatrix}
+\end{equation}
+\begin{equation}\nonumber
+= \begin{pmatrix}
+0.5(-0.4082)+0.3(0.8165)+0.2(-0.4082) \\ 0.3(-0.4082)+0.4(0.8165)+0.3(-0.4082) \\ 0.2(-0.4082)+0.3(0.8165)+0.5(-0.4082)
+\end{pmatrix} = \begin{pmatrix}
+     -0.4082*0.1 \\ 0.8165*0.1 \\  -0.4082*0.1
+\end{pmatrix}
+\end{equation}
+\begin{equation}\nonumber
+= \begin{pmatrix}
+    0,04079 \\ 0,08168 \\ -0,04079
+\end{pmatrix} = \begin{pmatrix}
+     0,04079 \\ 0,08168 \\  -0,04079
+\end{pmatrix}
+\end{equation}
+\vspace{0.1in}
+\\ Egenvektoren $v=(-0.4082,0.8165,-0.4082)$ med egenverdien $\lambda = 0.1$ stemmer.
+\vspace{0.1in}
+\begin{equation}\nonumber
+Av_2 = \begin{pmatrix}
+    0.5 & 0.3 & 0.2 \\ 0.3 & 0.4 & 0.3 \\ 0.2 & 0.3 & 0.5
+\end{pmatrix}\begin{pmatrix}
+     -0.7071 \\ 0.0000 \\ 0.7071
+\end{pmatrix} = 0.3 \begin{pmatrix}
+     -0.7071 \\ 0.0000 \\ 0.7071
+\end{pmatrix}
+\end{equation}
+\begin{equation}\nonumber
+= \begin{pmatrix}
+0.5(-0.7071)+0.3(0.0000)+0.2(0.7071) \\ 0.3(-0.7071)+0.4(0.0000)+0.3(0.7071) \\ 0.2(-0.7071)+0.3(0.0000)+0.5(0.7071)
+\end{pmatrix} = \begin{pmatrix}
+     -0.7071*0.3 \\ 0.0000*0.3 \\ 0.7071*0.3
+\end{pmatrix}
+\end{equation}
+\begin{equation}\nonumber
+= \begin{pmatrix}
+    -0.21213 \\ 0.00000 \\ 0.21213
+\end{pmatrix} = \begin{pmatrix}
+     -0.21213 \\ 0.00000 \\  0.21213
+\end{pmatrix}
+\end{equation}
+\vspace{0.1in}
+\\ Egenvektoren $v=(-0.7071, 0.0000, 0.7071)$ med egenverdien $\lambda = 0.3$ stemmer også.
+
+\newpage
+c) Har gitt at man starter med 40 vogner hos Kiwi, 10 hos Meny, og 100 hos Rema 1000. For å finne ut hvor mange vogner som Meny vil stabilisere seg på over tid, må man finne tilstanden der fordelingen med handlevogner ikke endrer seg fra dag til dag, altså man må finne en vektor $s$ som ikke endres ved påfølgende multiplikasjon med matrisen $A$ ($As = s$). Denne vektoren er altså en egenvektor av $A$ som korresponderer til egenverdien $\lambda = 1$. Hvis man starter med en tilfeldig fordeling av handlevogner og multipliserer denne vektoren med matrisen gjentatte ganger, vil fordelingen av vognene nærme seg denne egenvektoren. 
+\\
+\\ Tar utgangspunkt i egenvektoren $v=(1,1,1)$ og skalerer den slik at summen av elementene blir lik summen av alle handlevognene. 
+\\ \begin{equation} \nonumber
+    40+10+100 = 150 \end{equation}
+    \begin{equation}\nonumber
+    150 : 3 = 50 \end{equation}
+    \begin{equation}\nonumber(1,1,1)*50 = (50,50,50)\end{equation}
+
+Alle butikkene vil ende opp med like mange vogner til slutt. Meny vil altså ende opp med 50 vogner. 
+
+
+\newpage
+\section{Oppgave} % for hver oppgave, lag en \section{Oppgave}
+a) Har gitt at området avgrenset av en torus kan parameteriseres ved
+
+\begin{equation}\nonumber
+    \boldsymbol{r}(u,v,w)=(R+w\cos{u})\cos{v}\boldsymbol{i}+(R+w\cos{u})\sin{v}\boldsymbol{j} + w\sin{u}\boldsymbol{k}
+\end{equation}
+der $0\leq u \leq 2\pi , 0 \leq v \leq 2\pi ,$ og $ 0 \leq w \leq r$.
+\\\\ Jacobideterminanten er determinanten av matrisen bestående av de partielle deriverte, så finner først de partielle deriverte av $r$ med hensyn til $u$, $v$ og $w$:
+\\
+\begin{equation}\nonumber
+    \frac{\partial\boldsymbol{r}}{\partial u} = \frac{\partial}{\partial u}[(R+w\cos{u})\cos{v}]\boldsymbol{i} + \frac{\partial}{\partial u}[(R+w\cos{u})\sin{v}]\boldsymbol{j} + \frac{\partial}{\partial u}[w \sin{u}]\boldsymbol{k}
+\end{equation}
+\begin{equation}\nonumber
+    \frac{\partial\boldsymbol{r}}{\partial v} = \frac{\partial}{\partial v}[(R+w\cos{u})\cos{v}]\boldsymbol{i} + \frac{\partial}{\partial v}[(R+w\cos{u})\sin{v}]\boldsymbol{j} + \frac{\partial}{\partial v}[w \sin{u}]\boldsymbol{k}
+\end{equation}
+\begin{equation}\nonumber
+    \frac{\partial\boldsymbol{r}}{\partial v} = \frac{\partial}{\partial w}[(R+w\cos{u})\cos{v}]\boldsymbol{i} + \frac{\partial}{\partial w}[(R+w\cos{u})\sin{v}]\boldsymbol{j} + \frac{\partial}{\partial w}[w \sin{u}]\boldsymbol{k}
+\end{equation}
+\\ Regner ut de partielle deriverte i MATLAB med denne koden: 
+\begin{lstlisting}[style=Matlab-editor]
+% Definerer symbolske variabler
+syms u v R w;
+
+% Definerer vektorfunksjonen
+r = [(R + w*cos(u))*cos(v), (R + w*cos(u))*sin(v), w*sin(u)];
+
+% Beregner den partielle deriverte med hensyn til u
+dr_du = diff(r, u);
+dr_du_simplified = simplify(dr_du);
+
+% Beregner den partielle deriverte med hensyn til v
+dr_dv = diff(r, v);
+dr_dv_simplified = simplify(dr_dv);
+
+% Beregner den partielle deriverte med hensyn til w
+dr_dw = diff(r, w);
+dr_dw_simplified = simplify(dr_dw);
+
+% Skriver ut de deriverte
+fprintf('Deriverte med hensyn til u:\n');
+pretty(dr_du_simplified)
+
+fprintf('\nDeriverte med hensyn til v:\n');
+pretty(dr_dv_simplified)
+
+fprintf('\nDeriverte med hensyn til w:\n');
+pretty(dr_dw_simplified)
+\end{lstlisting}
+Får utskriften:
+\begin{lstlisting}
+Deriverte med hensyn til u:
+[[-w cos(v) sin(u), -w sin(u) sin(v),w cos(u)]]
+
+Deriverte med hensyn til v:
+[[-sin(v) (R + w cos(u)), cos(v) (R + w cos(u)), 0]]
+
+Deriverte med hensyn til w:
+[[cos(u) cos(v), cos(u) sin(v), sin(u)]]
+\end{lstlisting}\\
+\vspace{0.1in}
+Setter man inn de partielle deriverte i en matrise får man Jacobimatrisen til $\boldsymbol{r}$:\\
+\begin{equation} \nonumber
+J = 
+\begin{bmatrix}
+-w \cos(v) \sin(u) & -\sin(v) (R + w \cos(u)) & \cos(u) \cos(v) \\
+-w \sin(u) \sin(v) & \cos(v) (R + w \cos(u)) & \cos(u) \sin(v) \\
+w \cos(u) & 0 & \sin(u)
+\end{bmatrix}
+\end{equation}\\
+\\ Finner absoluttverdien til determinanten til matrisen i MATLAB:
+\vspace{0.1in}
+\begin{lstlisting} [style=Matlab-editor]
+% Definerer symbolene og parameteriseringen av torusoverflaten
+R = sym('R'); % Ytre radius, anta at dette er kjent eller gitt
+w = sym('w'); % Indre radius, anta at dette er kjent eller gitt
+u = sym('u'); % Parameter u
+v = sym('v'); % Parameter v
+
+% Definerer de partielle deriverte
+du = [-w*cos(v)*sin(u), -w*sin(u)*sin(v), w*cos(u)];
+dv = [-sin(v)*(R + w*cos(u)), cos(v)*(R + w*cos(u)), 0];
+dw = [cos(u)*cos(v), cos(u)*sin(v), sin(u)];
+
+% Setter opp Jacobimatrisen
+J = [du; dv; dw];
+
+% Beregner determinanten av Jacobimatrisen
+detJ = det(J);
+
+% Forenkler resultatet
+detJ_simplified = simplify(detJ);
+
+% Beregner og viser absoluttverdien av determinanten
+abs_detJ = abs(detJ_simplified);
+disp(abs_detJ);
+\end{lstlisting}\\
+\newpage
+Får denne utskriften:
+\vspace{0.1in}
+\begin{lstlisting}
+    abs(cos(u)*w^2 + R*w)
+\end{lstlisting}
+\\ Dette kan skrives om til: 
+\begin{equation} \nonumber
+    \left|w(R+ wcos(u))\right|= w(R+ wcos(u))
+\end{equation}
+Har dermed vist at absoluttverdien til Jacobideterminanten til uttrykket er
+\begin{equation} \nonumber
+    \left|\frac{\partial(x, y, z)}{\partial(u, v, w)}\right| = w(R + w\cos u)
+\end{equation}\vspace{0.3 in}
+
+b) Kan beregne volumet av torusen med et trippelintegral av Jacobideterminanten som integrand over det gitte området. Dette gir integraluttrykket:
+\begin{equation} \nonumber
+    V = \int_0^{2\pi} \int_0^{2\pi} \int_0^r w(R+w\cos u) dw du dv
+\end{equation}
+\vspace{0.1in}\\
+\hspace{0.1in} Regner ut det innerste integralet:
+\begin{equation} \nonumber
+    \int_0^r w(R+w\cos{u}) dw = \int_0^r wR+w^2\cos{u} dw =
+     \left[  \frac{w^2R}{2}+\frac{w^3\cos{u}}{3} \right]_{0}^{r} = \frac{r^2R}{2}+\frac{r^3\cos{u}}{3}
+\end{equation}
+\vspace{0.1in}\\
+\hspace{0.1in}Integrerer så resultatet av det innerste integralet:
+\begin{equation} \nonumber
+    \int_0^{2\pi}\left( \frac{r^2R}{2}+\frac{r^3\cos{u}}{3}\right)du
+\end{equation}
+Integralet av cos over en full periode er 0, kan forenkle integralet til:
+\begin{equation} \nonumber
+    \int_0^{2\pi} \frac{r^2R}{2}du = \frac{r^2R}{2}\cdot 2\pi = \pi r^2R
+\end{equation}
+\vspace{0.1in}\\
+\hspace{0.1in} Integrerer dette resultatet videre:
+\begin{equation} \nonumber
+    \int_0^{2\pi}\pi r^2R dv = \pi r^2R \cdot 2\pi = 2\pi^2 r^2R
+\end{equation}
+\vspace{0.1in}\\
+Får altså at volumet av torusen er gitt ved:
+\begin{equation} \nonumber
+    V =  2\pi^2 r^2R
+\end{equation}
+\end{document}
